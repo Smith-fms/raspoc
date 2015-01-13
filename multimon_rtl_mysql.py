@@ -32,24 +32,32 @@ TabellePOC = "ras_pocsag_hist"
 TabelleFMS = "ras_fms_hist"
 TabelleZVEI = "ras_zvei_hist"
 
+########################################
+##### Userdaten ENDE               ##### 
+########################################
+### rtl_test aufrufen um Device zu identifizieren!
+### Scriptaufruf Beispiel POCSAG 1200 Baud per Device 0: sudo ./multimon_rtl_mysql.py U106 0 POCSAG1200 
+### Scriptaufruf Beispiel ZVEI & FMS: sudo ./multimon_rtl_mysql.py O444 1 FMSFSK ZVEI2
+
+
 # Kanal = ((Frequenz - 84,015 MHz) / 0,02 MHz) + 347 des Oberbandes 4m
 # Vor den Kanal ein O fuer Oberband - ein U fuer Unterband. Es werden nur die technischen Kanaele 101-125 im 2m Band beruecksichtigt!
-kanal = "OXXX"
+kanal = sys.argv[1]
 
 # Fehlerkorrektur ppm DVB-T Stick
 ppmerror = "31"
 
 # DVB-T Stick Device ID, Testen mit "rtl_test"
-deviceid = "0"
+deviceid = int(sys.argv[2])
 
 # -a POCSAG512 -a POCSAG1200 -a POCSAG2400 -a FMSFSK -a ZVEI2
-demod1 = ""
-demod2 = ""
-demod3 = ""
+demod1_arg = int(sys.argv[3])
+demod2_arg = int(sys.argv[4])
+demod3_arg = int(sys.argv[5])
+demod1 = "-a "+demo1_arg
+demod2 = "-a "+demo2_arg
+demod2 = "-a "+demo3_arg
 
-########################################
-##### Userdaten ENDE               ##### 
-########################################
 a_schleife_zvei = ""
 a_address_fms = ""
 a_status_fms = ""
