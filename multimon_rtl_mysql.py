@@ -183,15 +183,15 @@ try:
         # POCSAG - Abfrage
         elif line.__contains__("Alpha:"):
             if line.startswith('POCSAG'):
-                utc_stamp = int(time.time())	
-                address = line[21:28].replace(" ", "").zfill(7)	                        
-                subric = line[40:41].replace(" ", "").replace("3", "4").replace("2", "3").replace("1", "2").replace("0", "1")
-                message = line.split('Alpha:   ')[1].strip().rstrip('<EOT>').strip()    
-                output=(curtime()+' '+ address+' '+ subric+' '+ message+'\n')
+               utc_stamp = int(time.time())	
+               address = line[21:28].replace(" ", "").zfill(7)	                        
+               subric = line[40:41].replace(" ", "").replace("3", "4").replace("2", "3").replace("1", "2").replace("0", "1")
+               message = line.split('Alpha:   ')[1].strip().rstrip('<EOT>').strip()    
+               output=(curtime()+' '+ address+' '+ subric+' '+ message+'\n')
                 # Doppelalarmierung check
-                if address == poc_alt_address and message == poc_alt_message and utc_stamp < poc_alt_utc + 5:
+                  if address == poc_alt_address and message == poc_alt_message and utc_stamp < poc_alt_utc + 5:
                     print adress + " - POCSAG Doppenalarmierung - nichts unternommen"
-                else:
+                  else:
                     print curtime(), address, subric, message                               
                     with open('POCSAG.txt','a') as f:
                         f.write(output)
@@ -200,9 +200,9 @@ try:
                     cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text,einsatz) VALUES (%s,%s,%s,%s,%s)",(curtime(),address,subric,message,'0',))
                     cursor.close()
                     connection.commit()
-                poc_alt_address = address
-                poc_alt_utc = utc_stamp
-                poc_alt_message = message
+                  poc_alt_address = address
+                  poc_alt_utc = utc_stamp
+                  poc_alt_message = message
             if not "Alpha:" in line:                                                    
                 with open("POCSAG_KeinText.txt","a") as missed:
                     address = line[21:28].replace(" ", "").zfill(7)
