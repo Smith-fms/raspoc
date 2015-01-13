@@ -69,6 +69,9 @@ else:
    frequenz = "1"
 print "eingestellter Kanal: " + kanal[1:4] + " " + kanal[0] + "B"
 print "Kanalfrequenz: " + str(frequenz) + " MHz"
+print "Device Nr.: "+deviceid + " SDR-Stick"
+print "Dekodierung von: " + demod1[3:13]+" "+demod2[3:13]+" "+demod3[3:13]
+
 # ZVEI Filter Schleifen
 zvei_filter = ['00000', '11111', '22222', '33333', '44444', '55555', '66666', '77777', '88888', '99999']
 try:
