@@ -12,7 +12,7 @@ RASPOC - ein kleines python-Script für rtl_fm und multimon_ng getestes auf Rasp
 wget "http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-1.0.9.tar.gz/from/http://cdn.mysql.com/" -O<br>
 mysql-connector.tar && tar xfv mysql-connector.tar && cd mysql-connector-python* && chmod +x ./setup.py && sudo ./setup.py install<br><br>
 <b>-- USAGE:<br></b>
-sudo ./multimon_rtl_mysql.py [KANAL] [DEVICENUMBER] [DEMOD] ([DEMOD])([DEMOD])<br>
+sudo ./multimon_rtl_mysql.py [KANAL] [DEVICENUMBER] [DEMOD] ([DEMOD]) ([DEMOD])<br>
 
 <b>KANAL:<br></b>
 Vor den Kanal ein O fuer Oberband - ein U fuer Unterband. Es werden nur die technischen Kanaele 101-125 im 2m Band<br> beruecksichtigt! Kanal E fuer E*BOS<br>
