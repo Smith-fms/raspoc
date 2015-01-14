@@ -1,18 +1,30 @@
 #!/usr/bin/python
 # -*- coding: cp1252 -*-
 '''
-!! This requires a recent build of Multimon-NG as the old builds wont accept a piped input !!
-Change the rtl_fm string to suit your needs.. add -a POCSAG512 , 2400 etc if needed to the Multimon-ng string
-This just prints and writes to a file, you can put it in a threaded class and pass though a queue
-or whatever suits your needs.
+RASPOC - ein kleines python-Script für rtl_fm und multimon_ng 
+getestes auf Raspberry Pi und Cubieboard
 
-Aenderungen  fuer Deutschland und Kommentare von Smith - Funkmeldesystem.de-Forum.
-Bitte beachten, bei POC512 ist die Zeichenkette jeweiles um ein Zeichen kuerzer!
-MySQL-Funktion hinzugefuegt. 
-
-Pyton MySQL-Support installieren
+-- Pyton MySQL-Support installieren
 wget "http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-1.0.9.tar.gz/from/http://cdn.mysql.com/" -O mysql-connector.tar && tar xfv mysql-connector.tar && cd mysql-connector-python* && chmod +x ./setup.py && sudo ./setup.py install
 
+-- USAGE:
+sudo ./multimon_rtl_mysql.py [KANAL] [DEVICENUMBER] [DEMOD] ([DEMOD])([DEMOD])
+
+-- INFOS
+KANAL:
+Vor den Kanal ein O fuer Oberband - ein U fuer Unterband. Es werden nur die technischen Kanaele 101-125 im 2m Band beruecksichtigt! Kanal E fuer E*BOS
+DEVICE:
+Das Device ist bei einem SDR-Stick immer 0. Bei mehr als einem Stick ist der Stick mit rtl_test zu ermitteln.
+DEMOD:
+Es stehen 5 Demodulationsarten des multimon-ng zur Verarbeitung. 
+FMSFSK (FMS BOS DE)
+POCSAG512 (Achtung, hier nur mit Anpassung des Script)
+POCSAG1200
+POCSAG2400 
+ZVEI2 (normales ZVEI BOS DE)
+Es können max. 3 gleichzeitig pro Stick und Frequenz genutzt werden
+
+Bei Problemen bitte ein Issuse aufmachen! 
 '''
 import time
 import sys
