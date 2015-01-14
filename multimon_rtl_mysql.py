@@ -34,14 +34,14 @@ TabelleZVEI = "ras_zvei_hist"
 
 ########################################
 ##### Userdaten ENDE               ##### 
-########################################
+#########################################################################################################
 ### rtl_test aufrufen um Device zu identifizieren!
 ### Scriptaufruf Beispiel POCSAG 1200 Baud per Device 0: sudo ./multimon_rtl_mysql.py U106 0 POCSAG1200 
 ### Scriptaufruf Beispiel ZVEI & FMS: sudo ./multimon_rtl_mysql.py O444 1 FMSFSK ZVEI2
-
+#########################################################################################################
 
 # Kanal = ((Frequenz - 84,015 MHz) / 0,02 MHz) + 347 des Oberbandes 4m
-# Vor den Kanal ein O fuer Oberband - ein U fuer Unterband. Es werden nur die technischen Kanaele 101-125 im 2m Band beruecksichtigt!
+# Vor den Kanal ein O fuer Oberband - ein U fuer Unterband. Es werden nur die technischen Kanaele 101-125 im 2m Band beruecksichtigt! Kanal E fuer E*BOS
 kanal = sys.argv[1]
 
 # Fehlerkorrektur ppm DVB-T Stick
@@ -51,12 +51,20 @@ ppmerror = "31"
 deviceid = int(sys.argv[2])
 
 # -a POCSAG512 -a POCSAG1200 -a POCSAG2400 -a FMSFSK -a ZVEI2
-demod1_arg = int(sys.argv[3])
-demod2_arg = int(sys.argv[4])
-demod3_arg = int(sys.argv[5])
-demod1 = "-a "+demo1_arg
-demod2 = "-a "+demo2_arg
-demod2 = "-a "+demo3_arg
+if len(sys.argv) == 6:
+    demod1 = ("-a "+sys.argv[3])
+    demod2 = "-a "+sys.argv[4]
+    demod3 = "-a "+sys.argv[5]
+elif len(sys.argv) == 5:
+    demod1 = ("-a "+sys.argv[3])
+    demod2 = "-a "+sys.argv[4]
+    demod3 = ""
+elif len(sys.argv) == 4:
+    demod1 = ("-a "+sys.argv[3])
+    demod2 = ""
+    demod3 = ""
+else:
+    print "Zuviele Argumente! - max. 3 Demodulationen einstellbar!"
 
 a_schleife_zvei = ""
 a_address_fms = ""
@@ -73,12 +81,15 @@ elif kanal[0:1] == "O":
    frequenz = ((int(kanal[1:4]) - 347) * 0.02) + 84.015
 elif kanal[0:1] == "U":
    frequenz = ((int(kanal[1:4]) - 347) * 0.02) + 74.215
+elif kanal[0:1] == "E":
+   frequenz = "448.425"
 else:
    frequenz = "1"
+
 print "eingestellter Kanal: " + kanal[1:4] + " " + kanal[0] + "B"
 print "Kanalfrequenz: " + str(frequenz) + " MHz"
-print "Device Nr.: "+deviceid + " SDR-Stick"
-print "Dekodierung von: " + demod1[3:13]+" "+demod2[3:13]+" "+demod3[3:13]
+print "Device Nr.: "+str(deviceid) + " SDR-Stick"
+print "Dekodierung von: "+demod1[3:13]+" "+demod2[3:13]+" "+demod3[3:13]
 
 # ZVEI Filter Schleifen
 zvei_filter = ['00000', '11111', '22222', '33333', '44444', '55555', '66666', '77777', '88888', '99999']
@@ -191,26 +202,19 @@ try:
         # POCSAG - Abfrage
         elif line.__contains__("Alpha:"):
             if line.startswith('POCSAG'):
-               utc_stamp = int(time.time())	
-               address = line[21:28].replace(" ", "").zfill(7)	                        
-               subric = line[40:41].replace(" ", "").replace("3", "4").replace("2", "3").replace("1", "2").replace("0", "1")
-               message = line.split('Alpha:   ')[1].strip().rstrip('<EOT>').strip()    
-               output=(curtime()+' '+ address+' '+ subric+' '+ message+'\n')
-                # Doppelalarmierung check
-                  if address == poc_alt_address and message == poc_alt_message and utc_stamp < poc_alt_utc + 5:
-                    print adress + " - POCSAG Doppenalarmierung - nichts unternommen"
-                  else:
-                    print curtime(), address, subric, message                               
-                    with open('POCSAG.txt','a') as f:
-                        f.write(output)
-                    #Datensatz einfuegen
-                    cursor = connection.cursor()
-                    cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text,einsatz) VALUES (%s,%s,%s,%s,%s)",(curtime(),address,subric,message,'0',))
-                    cursor.close()
-                    connection.commit()
-                  poc_alt_address = address
-                  poc_alt_utc = utc_stamp
-                  poc_alt_message = message
+                utc_stamp = int(time.time())	
+                address = line[21:28].replace(" ", "").zfill(7)	                        
+                subric = line[40:41].replace(" ", "").replace("3", "4").replace("2", "3").replace("1", "2").replace("0", "1")
+                message = line.split('Alpha:   ')[1].strip().rstrip('<EOT>').strip()    
+                output=(curtime()+' '+ address+' '+ subric+' '+ message+'\n')
+                print curtime(), address, subric, message                               
+                with open('POCSAG.txt','a') as f:
+                    f.write(output)
+                #Datensatz einfuegen
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text,einsatz) VALUES (%s,%s,%s,%s,%s)",(curtime(),address,subric,message,'0',))
+                cursor.close()
+                connection.commit()
             if not "Alpha:" in line:                                                    
                 with open("POCSAG_KeinText.txt","a") as missed:
                     address = line[21:28].replace(" ", "").zfill(7)
@@ -222,7 +226,5 @@ try:
                     cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text,einsatz) VALUES (%s,%s,%s,%s,%s)",(curtime(),address,subric,'','0',))
                     cursor.close()
                     connection.commit()
-                  
 except KeyboardInterrupt:
     os.kill(multimon_ng.pid, 9)
-
