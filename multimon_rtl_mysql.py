@@ -39,7 +39,7 @@ import mysql.connector
 dbserver = "localhost"
 dbuser = ""
 dbpassword = ""
-datenbank = ""
+datenbank = "raspoc"
 TabellePOC = "ras_pocsag_hist"
 TabelleFMS = "ras_fms_hist"
 TabelleZVEI = "ras_zvei_hist"
@@ -224,7 +224,7 @@ try:
                     f.write(output)
                 #Datensatz einfuegen
                 cursor = connection.cursor()
-                cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text,einsatz) VALUES (%s,%s,%s,%s,%s)",(curtime(),address,subric,message,'0',))
+                cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text) VALUES (%s,%s,%s,%s)",(curtime(),address,subric,message,))
                 cursor.close()
                 connection.commit()
             if not "Alpha:" in line:                                                    
@@ -235,7 +235,7 @@ try:
                     missed.write(line)
                     #Datensatz einfuegen
                     cursor = connection.cursor()
-                    cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text,einsatz) VALUES (%s,%s,%s,%s,%s)",(curtime(),address,subric,'','0',))
+                    cursor.execute("INSERT INTO "+str(TabellePOC)+" (time,ric,funktion,text) VALUES (%s,%s,%s,%s)",(curtime(),address,subric,'',))
                     cursor.close()
                     connection.commit()
 except KeyboardInterrupt:
