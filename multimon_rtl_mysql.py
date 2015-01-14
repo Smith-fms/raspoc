@@ -216,7 +216,7 @@ try:
                 cursor.close()
                 connection.commit()
             if not "Alpha:" in line:                                                    
-                with open("POCSAG_KeinText.txt","a") as missed:
+                with open("POCSAG.txt","a") as missed:
                     address = line[21:28].replace(" ", "").zfill(7)
                     subric = line[40:41].replace(" ", "").replace("3", "4").replace("2", "3").replace("1", "2").replace("0", "1")
                     print  curtime(), address, subric
