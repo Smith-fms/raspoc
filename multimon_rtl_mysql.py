@@ -8,13 +8,15 @@ getestes auf Raspberry Pi und Cubieboard
 wget "http://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-1.0.9.tar.gz/from/http://cdn.mysql.com/" -O mysql-connector.tar && tar xfv mysql-connector.tar && cd mysql-connector-python* && chmod +x ./setup.py && sudo ./setup.py install
 
 -- USAGE:
-sudo ./multimon_rtl_mysql.py [KANAL] [DEVICENUMBER] [DEMOD] ([DEMOD])([DEMOD])
+sudo ./multimon_rtl_mysql.py [KANAL] [DEVICENUMBER] [ERRORPPM] [DEMOD] ([DEMOD])([DEMOD])
 
 -- INFOS
 KANAL:
 Vor den Kanal ein O fuer Oberband - ein U fuer Unterband. Es werden nur die technischen Kanaele 101-125 im 2m Band beruecksichtigt! Kanal E fuer E*BOS
 DEVICE:
 Das Device ist bei einem SDR-Stick immer 0. Bei mehr als einem Stick ist der Stick mit rtl_test zu ermitteln.
+ERRORPPM
+ist zu testen mit rtl_test. Als Zahl ohne weiteres. Meist 31.
 DEMOD:
 Es stehen 5 Demodulationsarten des multimon-ng zur Verarbeitung. 
 FMSFSK (FMS BOS DE)
@@ -48,31 +50,30 @@ TabelleZVEI = "ras_zvei_hist"
 ##### Userdaten ENDE               ##### 
 #########################################################################################################
 ### rtl_test aufrufen um Device zu identifizieren!
-### Scriptaufruf Beispiel POCSAG 1200 Baud per Device 0: sudo ./multimon_rtl_mysql.py U106 0 POCSAG1200 
-### Scriptaufruf Beispiel ZVEI & FMS: sudo ./multimon_rtl_mysql.py O444 1 FMSFSK ZVEI2
+### Scriptaufruf Beispiel POCSAG 1200 Baud per Device 0: sudo ./multimon_rtl_mysql.py U106 0 31 POCSAG1200 
+### Scriptaufruf Beispiel ZVEI & FMS: sudo ./multimon_rtl_mysql.py O444 1 31 FMSFSK ZVEI2
 #########################################################################################################
 
 # Kanal = ((Frequenz - 84,015 MHz) / 0,02 MHz) + 347 des Oberbandes 4m
 # Vor den Kanal ein O fuer Oberband - ein U fuer Unterband. Es werden nur die technischen Kanaele 101-125 im 2m Band beruecksichtigt! Kanal E fuer E*BOS
 kanal = sys.argv[1]
-
-# Fehlerkorrektur ppm DVB-T Stick
-ppmerror = "31"
-
 # DVB-T Stick Device ID, Testen mit "rtl_test"
 deviceid = int(sys.argv[2])
 
+# Fehlerkorrektur ppm DVB-T Stick
+ppmerror = int(sys.argv[3])
+
 # -a POCSAG512 -a POCSAG1200 -a POCSAG2400 -a FMSFSK -a ZVEI2
-if len(sys.argv) == 6:
-    demod1 = ("-a "+sys.argv[3])
-    demod2 = "-a "+sys.argv[4]
-    demod3 = "-a "+sys.argv[5]
-elif len(sys.argv) == 5:
-    demod1 = ("-a "+sys.argv[3])
-    demod2 = "-a "+sys.argv[4]
+if len(sys.argv) == 7:
+    demod1 = "-a "+sys.argv[4]
+    demod2 = "-a "+sys.argv[5]
+    demod3 = "-a "+sys.argv[6]
+elif len(sys.argv) == 6:
+    demod1 = ("-a "+sys.argv[4])
+    demod2 = "-a "+sys.argv[5]
     demod3 = ""
-elif len(sys.argv) == 4:
-    demod1 = ("-a "+sys.argv[3])
+elif len(sys.argv) == 5:
+    demod1 = ("-a "+sys.argv[4])
     demod2 = ""
     demod3 = ""
 else:
@@ -101,6 +102,7 @@ else:
 print "eingestellter Kanal: " + kanal[1:4] + " " + kanal[0] + "B"
 print "Kanalfrequenz: " + str(frequenz) + " MHz"
 print "Device Nr.: "+str(deviceid) + " SDR-Stick"
+print "Error Korrektur: "+str(ppmerror) + " ppm"
 print "Dekodierung von: "+demod1[3:13]+" "+demod2[3:13]+" "+demod3[3:13]
 
 # ZVEI Filter Schleifen
