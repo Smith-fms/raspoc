@@ -29,3 +29,5 @@ ZVEI2 (normales ZVEI BOS DE)<br>
 Es muss ein Modus ausgesucht werden. Max. 3 gleichzeitig pro Stick und Frequenz können genutzt werden<br>
 
 <b>Bei Problemen bitte ein Issuse aufmachen! <br></b>
+<br>
+<b>Danke auch an McBo aus dem Funkmeldesystem.de-Forum! 
