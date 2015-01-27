@@ -62,7 +62,6 @@ deviceid = int(sys.argv[2])
 
 # Fehlerkorrektur ppm DVB-T Stick
 ppmerror = int(sys.argv[3])
-
 # -a POCSAG512 -a POCSAG1200 -a POCSAG2400 -a FMSFSK -a ZVEI2
 if len(sys.argv) == 7:
     demod1 = "-a "+sys.argv[4]
@@ -119,7 +118,7 @@ with open('Fehler.txt','a') as file:
 multimon_ng = subprocess.Popen("rtl_fm -d "+str(deviceid)+" -f "+str(frequenz)+"M -M fm -s 22050 -p "+str(ppmerror)+" -E DC -F 0 -g 100 | multimon-ng "+str(demod1)+" "+str(demod2)+" "+str(demod3)+" -f alpha -t raw -",
                                #stdin=rtl_fm.stdout,
                                stdout=subprocess.PIPE,
-                               stderr=open('error_marcel.txt','a'),
+                               stderr=open('error.txt','a'),
                                shell=True)
 try:
     while True:
