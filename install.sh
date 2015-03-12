@@ -82,7 +82,7 @@ cd raspoc
 chmod +x *
 
 # standard treiber des SDR-Sticks aus dem Kernelmodulen blacklisten
-echo -e "# blacklist the DVB drivers to avoid conflict with the SDR driver\n blacklist dvb_usb_rtl28xxu \n blacklist rtl2830\n blacklist dvb_usb_v2\n blacklist dvb_core" >> /etc/modprobe.d/raspi-blacklist_sdr.conf
+echo "# blacklist the DVB drivers to avoid conflict with the SDR driver\n blacklist dvb_usb_rtl28xxu \n blacklist rtl2830\n blacklist dvb_usb_v2\n blacklist dvb_core" >> /etc/modprobe.d/raspi-blacklist_sdr.conf
 
 tput cup 13 15
 echo "Fertig!"
