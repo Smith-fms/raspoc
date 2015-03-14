@@ -86,21 +86,21 @@ a_zeit_zvei = int(time.time())
 a_zeit_fms = int(time.time())
 frequenz = "0"
 if kanal[0:2] == "U1":
-frequenz = ((int(kanal[1:4]) - 101) * 0.02) + 165.210
+    frequenz = ((int(kanal[1:4]) - 101) * 0.02) + 165.210
 elif kanal[0:2] == "O1":
-frequenz = ((int(kanal[1:4]) - 101) * 0.02) + 169.810
+    frequenz = ((int(kanal[1:4]) - 101) * 0.02) + 169.810
 elif kanal[0:2] == "U2":
-frequenz = ((int(kanal[1:4]) - 201) * 0.02) + 167.560
+    frequenz = ((int(kanal[1:4]) - 201) * 0.02) + 167.560
 elif kanal[0:2] == "O2":
-frequenz = ((int(kanal[1:4]) - 201) * 0.02) + 172.160
+    frequenz = ((int(kanal[1:4]) - 201) * 0.02) + 172.160
 elif kanal[0:1] == "O":
-frequenz = ((int(kanal[1:4]) - 347) * 0.02) + 84.015
+    frequenz = ((int(kanal[1:4]) - 347) * 0.02) + 84.015
 elif kanal[0:1] == "U":
-frequenz = ((int(kanal[1:4]) - 347) * 0.02) + 74.215
+    frequenz = ((int(kanal[1:4]) - 347) * 0.02) + 74.215
 elif kanal[0:1] == "E":
-frequenz = "448.425"
+    frequenz = "448.425"
 else:
-frequenz = "1"
+    frequenz = "1"
 
 print "eingestellter Kanal: " + kanal[1:4] + " " + kanal[0] + "B"
 print "Kanalfrequenz: " + str(frequenz) + " MHz"
